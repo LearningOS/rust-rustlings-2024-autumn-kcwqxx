@@ -11,7 +11,7 @@
 // TODO markers.
 //
 // Execute `rustlings hint cow1` or use the `hint` watch subcommand for a hint.
-
+// i m not done
 
 use std::borrow::Cow;
 
@@ -48,15 +48,7 @@ mod tests {
         let mut input = Cow::from(&slice[..]);
         match abs_all(&mut input) {
             // TODO
-            Cow::Owned(_) => Err("Expected Cow::Borrowed, got Cow::Owned"), // 不应该发生克隆
-            Cow::Borrowed(borrowed) => {
-                if borrowed == &[0, 1, 2] {
-                    Ok(())
-                } else {
-                    Err("Array content is incorrect")
-                }
-            }
-        }
+           
         }
     }
 
