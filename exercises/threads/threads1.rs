@@ -8,25 +8,24 @@
 // Execute `rustlings hint threads1` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
-
 use std::thread;
 use std::time::{Duration, Instant};
 
 fn main() {
-    let mut handles = vec![];
-    for i in 0..10 {
+    let mut handles = vec![]; // 创建一个空的向量以存储线程句柄
+    for i in 0..10 {// 循环10次，每次创建一个线程
         handles.push(thread::spawn(move || {
-            let start = Instant::now();
-            thread::sleep(Duration::from_millis(250));
-            println!("thread {} is complete", i);
-            start.elapsed().as_millis()
+            let start = Instant::now();//记录每次开始时间
+            thread::sleep(Duration::from_millis(250));//每个进程休眠250毫秒
+            println!("thread {} is complete", i);//打印线程完成信息
+            start.elapsed().as_millis()//返回线程运行时间
         }));
     }
 
-    let mut results: Vec<u128> = vec![];
+    let mut results: Vec<u128> = vec![];// 创建一个空的向量以存储线程返回的结果
     for handle in handles {
         // TODO: a struct is returned from thread::spawn, can you use it?
+        results.push(handle.join().unwrap());//将每个线程的结果添加到结果向量中
     }
 
     if results.len() != 10 {
