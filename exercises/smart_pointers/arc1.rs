@@ -28,12 +28,15 @@ use std::sync::Arc;
 use std::thread;
 
 fn main() {
+    //创建一个0到99的向量
     let numbers: Vec<_> = (0..100u32).collect();
-    let shared_numbers = // TODO
+    //用Arcs包装numbers，使其可以在多个线程之间共享
+    let shared_numbers = Arc::new(numbers);
     let mut joinhandles = Vec::new();
-
+//创建8个线程，每个线程计算一个偏移量的和
     for offset in 0..8 {
-        let child_numbers = // TODO
+        //为每个进程创建子切片
+        let child_numbers = Arc::clone(&shared_numbers);// TODO
         joinhandles.push(thread::spawn(move || {
             let sum: u32 = child_numbers.iter().filter(|&&n| n % 8 == offset).sum();
             println!("Sum of offset {} is {}", offset, sum);
