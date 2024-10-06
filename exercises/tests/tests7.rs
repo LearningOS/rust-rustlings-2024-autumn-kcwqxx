@@ -34,13 +34,24 @@
 // Execute `rustlings hint tests7` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
 
-fn main() {}
+
+use std::env;
+
+fn main() {
+    // 获取环境变量 TEST_FOO
+    if let Ok(value) = env::var("TEST_FOO") {
+        // 将环境变量的值传递给 Cargo
+        println!("cargo:rustc-env=TEST_FOO={}", value);
+    } else {
+        eprintln!("TEST_FOO environment variable not set.");
+    }
+}
+
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+   // use super::*;
 
     #[test]
     fn test_success() {
