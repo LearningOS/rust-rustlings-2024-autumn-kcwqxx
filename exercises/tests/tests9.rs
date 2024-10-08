@@ -29,15 +29,21 @@
 
 // I AM NOT DONE
 
-extern "Rust" {
+extern "Rust" {//声明外部导入函数
     fn my_demo_function(a: u32) -> u32;
     fn my_demo_function_alias(a: u32) -> u32;
 }
 
-mod Foo {
+mod foo {
     // No `extern` equals `extern "Rust"`.
+    #[no_mangle] // 防止名称修饰，以便外部链接时可以正确识别 my_demo_function
     fn my_demo_function(a: u32) -> u32 {
         a
+    }
+
+    #[no_mangle] // 防止名称修饰，以便外部链接时可以正确识别 my_demo_function_alias
+    pub fn my_demo_function_alias(a: u32) -> u32 {
+        my_demo_function(a) // 调用 my_demo_function 并返回结果
     }
 }
 
