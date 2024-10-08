@@ -11,19 +11,16 @@ fn main() {
         .unwrap()
         .as_secs(); // What's the use of this timestamp here?
        // 设置环境变量 TEST_FOO
-       let test_foo_value = format!("Value at {}", timestamp);
-       println!("cargo:rerun-if-env-changed=TEST_FOO"); // 让 Cargo 在环境变量变化时重新构建
-       println!("cargo:TEST_FOO={}", test_foo_value); // 设置环境变量
+       println!("cargo:rustc-env=TEST_FOO={}", timestamp);
+
 
     // In tests8, we should enable "pass" feature to make the
     // testcase return early. Fill in the command to tell
     // Cargo about that.
     
-        // 设置 rustc 的配置标志
-        println!("cargo:rustc-cfg=pass");
+    println!("cargo:rustc-cfg=feature=\"pass\"");
+
     
-        // 如果需要，可以添加条件重新构建的指令
-        println!("cargo:rerun-if-env-changed=PASS");
     
 
 }
