@@ -27,7 +27,7 @@
 //
 // You should NOT modify any existing code except for adding two lines of attributes.
 
-// I AM NOT DONE
+
 
 extern "Rust" {//声明外部导入函数
     fn my_demo_function(a: u32) -> u32;
