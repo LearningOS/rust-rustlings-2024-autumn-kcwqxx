@@ -45,32 +45,46 @@ impl Default for Person {
 impl From<&str> for Person {
     fn from(s: &str) -> Person {
         // 1. If the length of the provided string is 0, then return the default of
-//    Person.
-        if s.len() == 0 {
+        //    Person.
+        if s.is_empty(){
             return Person::default();
         }
-// 2. Split the given string on the commas present in it.
+        // 2. Split the given string on the commas present in it.
         let split: Vec<&str> = s.split(",").collect();
-// 3. Extract the first element from the split operation and use it as the name.
-        let name = split[0].trim();
-// 4. If the name is empty, then return the default of Person.
+        // 3. Extract the first element from the split operation and use it as the name.
+        if split.len() != 2 {
+            return Person::default(); // 返回默认值
+        }
+        let name = split
+            .get(0)
+            .map(|&n| n.trim().to_string())
+            .unwrap_or_else(|| String::from("John"));
+
+        // 4. If the name is empty, then return the default of Person.
         if name.is_empty() {
             return Person::default();
         }
-// 5. Extract the other element from the split operation and parse it into a
-//    `usize` as the age.
-      let age = match split.get(1) {
-         // 如果存在第二个元素
-         Some(&age_str) => age_str.trim().parse::<usize>().unwrap_or_else(|_| {
-          // 如果解析失败，返回默认的年龄
-           30
-         }),
-        // 如果不存在第二个元素，返回默认的年龄
-      None => 30,
-};
-// If while parsing the age, something goes wrong, then return the default of
-// Person Otherwise, then return an instantiated Person object with the results
-           Person { name:name.to_string(), age }// 正确地返回 Result<Person, ()>
+        // 5. Extract the other element from the split operation and parse it into a
+        //    `usize` as the age.
+        let age = match split.get(1) {
+            Some(&age_str) => {
+                if age_str.trim().is_empty() {
+                    return Person::default(); // 年龄为空，返回默认值
+                }
+                // 尝试解析年龄，解析失败则返回默认值
+                age_str.trim().parse::<usize>().map_err(|_| ()).ok() // 如果失败，返回 None
+            }
+            None => None, // 如果不存在第二个元素，返回 None
+        };
+
+        // 根据年龄的解析情况决定返回的 Person 对象
+        match age {
+            Some(valid_age) => Person {
+                name,
+                age: valid_age,
+            },
+            None => Person::default(), // 年龄无效，返回默认值
+        }
     }
 }
 
