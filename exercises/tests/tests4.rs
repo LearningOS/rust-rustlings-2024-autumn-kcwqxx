@@ -25,6 +25,7 @@ impl Rectangle {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::panic;
 
     #[test]
     fn correct_width_and_height() {
@@ -37,13 +38,19 @@ mod tests {
     #[test]
     fn negative_width() {
         // This test should check if program panics when we try to create rectangle with negative width
-        let _rect = Rectangle::new(-10, 10);
+        let result = panic::catch_unwind(|| {
+            let _rect = Rectangle::new(-10, 10);
+        });
+        assert!(result.is_err()); // 检查是否发生了 panic
         
     }
 
     #[test]
     fn negative_height() {
         // This test should check if program panics when we try to create rectangle with negative height
-        let _rect = Rectangle::new(10, -10);
+        let result = panic::catch_unwind(|| {
+            let _rect = Rectangle::new(10, -10);
+        });
+        assert!(result.is_err()); // 检查是否发生了 panic
     }
 }
