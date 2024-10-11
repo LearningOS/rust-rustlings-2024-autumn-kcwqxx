@@ -54,9 +54,10 @@ impl<T> Default for Queue<T> {
 
 pub struct myStack<T>
 {
-	//TODO
+	
 	q1:Queue<T>,
 	q2:Queue<T>
+
 }
 impl<T> myStack<T> {
     pub fn new() -> Self {
@@ -68,17 +69,29 @@ impl<T> myStack<T> {
     }
     pub fn push(&mut self, elem: T) {
         //TODO
+        self.q1.enqueue(elem);
     }
-    pub fn pop(&mut self) -> Result<T, &str> {
+    pub fn pop(&mut self ) -> Result<T, &str> {
         //TODO
+        if self.q1.size() > 0 {
+            while self.q1.size() > 1 {
+                self.q2.enqueue(self.q1.dequeue().unwrap());
+            }
+            let result = self.q1.dequeue();
+            while self.q2.size() > 0 {
+                self.q1.enqueue(self.q2.dequeue().unwrap());
+            }
+            result
+        } else {
 		Err("Stack is empty")
     }
+}
     pub fn is_empty(&self) -> bool {
 		//TODO
-        true
+       self.q1.is_empty()
     }
+  
 }
-
 #[cfg(test)]
 mod tests {
 	use super::*;
