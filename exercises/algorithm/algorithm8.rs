@@ -2,7 +2,7 @@
 	queue
 	This question requires you to use queues to implement the functionality of the stac
 */
-// I AM NOT DONE
+
 
 #[derive(Debug)]
 pub struct Queue<T> {
@@ -72,19 +72,23 @@ impl<T> myStack<T> {
         self.q1.enqueue(elem);
     }
     pub fn pop(&mut self ) -> Result<T, &str> {
-        //TODO
         if self.q1.size() > 0 {
+            // 将 q1 中的元素移动到 q2，只剩下最后一个元素
             while self.q1.size() > 1 {
                 self.q2.enqueue(self.q1.dequeue().unwrap());
             }
-            let result = self.q1.dequeue();
-            while self.q2.size() > 0 {
-                self.q1.enqueue(self.q2.dequeue().unwrap());
-            }
-            result
+
+            // 获取 q1 中的最后一个元素
+            let final_value = self.q1.dequeue().unwrap();
+
+            // 将 q2 重新赋值给 q1
+            self.q1 = std::mem::replace(&mut self.q2, Queue::new());
+
+            // 返回最终值
+            Ok(final_value)
         } else {
-		Err("Stack is empty")
-    }
+            Err("Stack is empty")
+        }
 }
     pub fn is_empty(&self) -> bool {
 		//TODO
