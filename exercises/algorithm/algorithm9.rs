@@ -38,6 +38,12 @@ where
 
     pub fn add(&mut self, value: T) {
         //TODO
+         // 将新元素添加到堆末尾
+         self.items.push(value);
+         self.count += 1;
+ 
+         // 向上调整堆
+         self.heapify_up(self.count);
     }
 
     fn parent_idx(&self, idx: usize) -> usize {
@@ -58,7 +64,41 @@ where
 
     fn smallest_child_idx(&self, idx: usize) -> usize {
         //TODO
-		0
+        let left = self.left_child_idx(idx);
+        let right = self.right_child_idx(idx);
+
+        // 如果右子节点不存在或左子节点更优，则返回左子节点
+        if right > self.count || (self.comparator)(&self.items[left], &self.items[right]) {
+            left
+        } else {
+            right
+        }
+		
+    }
+    
+    fn heapify_up(&mut self, mut idx: usize) {
+        while idx > 1 && (self.comparator)(&self.items[idx], &self.items[self.parent_idx(idx)]) {
+            let parent_idx = self.parent_idx(idx); // 先存储父节点索引
+            if (self.comparator)(&self.items[idx], &self.items[parent_idx]) {
+                self.items.swap(idx, parent_idx);
+                idx = parent_idx;
+            } else {
+                break;
+            }
+        }
+    }
+
+    fn heapify_down(&mut self, mut idx: usize) {
+        while self.children_present(idx) {
+            let smaller_child_idx = self.smallest_child_idx(idx);
+
+            if (self.comparator)(&self.items[smaller_child_idx], &self.items[idx]) {
+                self.items.swap(idx, smaller_child_idx);
+                idx = smaller_child_idx;
+            } else {
+                break;
+            }
+        }
     }
 }
 
@@ -85,8 +125,21 @@ where
 
     fn next(&mut self) -> Option<T> {
         //TODO
-		None
+        if self.is_empty() {
+            return None;
+        }
+
+        // 从堆中取出堆顶元素
+        let result = self.items.swap_remove(1); // 将最后一个元素移到堆顶
+        self.count -= 1;
+
+        // 重新调整堆的结构
+        self.heapify_down(1);
+
+        Some(result)
+		
     }
+    
 }
 
 pub struct MinHeap;

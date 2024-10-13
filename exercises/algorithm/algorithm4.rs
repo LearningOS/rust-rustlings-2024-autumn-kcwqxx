@@ -51,13 +51,39 @@ where
     // Insert a value into the BST
     fn insert(&mut self, value: T) {
         //TODO
+        match value.cmp(&self.root.as_ref().unwrap().value) {
+            Ordering::Less =>{
+                self.root.unwrap().left = Some(Box::new(TreeNode::new(value)));
+            }
+            Ordering::Greater =>{
+                self.root.unwrap().right = Some(Box::new(TreeNode::new(value)));
+            }
+            Ordering::Equal =>{
+                
+        }
     }
 
     // Search for a value in the BST
-    fn search(&self, value: T) -> bool {
-        //TODO
-        true
+     pub fn search(&self, value: T) -> bool {
+        fn search_node<T>(node: &Option<Box<TreeNode<T>>>, value: T) -> bool
+        where
+            T: Ord,
+        {
+            match node {
+                Some(ref boxed_node) => {
+                    match boxed_node.value.cmp(&value) {
+                        Ordering::Less => search_node(&boxed_node.right, value), // 在右子树中查找
+                        Ordering::Greater => search_node(&boxed_node.left, value), // 在左子树中查找
+                        Ordering::Equal => true, // 找到目标值
+                    }
+                }
+                None => false, // 节点为空，返回 false
+            }
+        }
+
+        search_node(&self.root, value)
     }
+}
 }
 
 impl<T> TreeNode<T>
@@ -66,7 +92,26 @@ where
 {
     // Insert a node into the tree
     fn insert(&mut self, value: T) {
-        //TODO
+        match value.cmp(&self.value) {
+            Ordering::Less => {
+                if let Some(ref mut left) = self.left {
+                    left.insert(value); // 递归插入到左子树
+                } else {
+                    self.left = Some(Box::new(TreeNode::new(value))); // 如果左子树为空，创建新节点
+                }
+            }
+            Ordering::Greater => {
+                if let Some(ref mut right) = self.right {
+                    right.insert(value); // 递归插入到右子树
+                } else {
+                    self.right = Some(Box::new(TreeNode::new(value))); // 如果右子树为空，创建新节点
+                }
+            }
+            Ordering::Equal => {
+                // 如果值相等，不插入重复值
+            }
+        }
+        
     }
 }
 
