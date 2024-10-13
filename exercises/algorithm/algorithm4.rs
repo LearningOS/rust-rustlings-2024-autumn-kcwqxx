@@ -3,7 +3,6 @@
 	This problem requires you to implement a basic interface for a binary tree
 */
 
-//I AM NOT DONE
 use std::cmp::Ordering;
 use std::fmt::Debug;
 
@@ -51,39 +50,30 @@ where
     // Insert a value into the BST
     fn insert(&mut self, value: T) {
         //TODO
-        match value.cmp(&self.root.as_ref().unwrap().value) {
-            Ordering::Less =>{
-                self.root.unwrap().left = Some(Box::new(TreeNode::new(value)));
+        match self.root {
+            Some(ref mut node) => node.insert(value), // 如果树不为空，递归调用节点的插入方法
+            None => {
+                // 如果树为空，创建一个新的根节点
+                self.root = Some(Box::new(TreeNode::new(value)));
             }
-            Ordering::Greater =>{
-                self.root.unwrap().right = Some(Box::new(TreeNode::new(value)));
-            }
-            Ordering::Equal =>{
-                
         }
     }
 
     // Search for a value in the BST
-     pub fn search(&self, value: T) -> bool {
-        fn search_node<T>(node: &Option<Box<TreeNode<T>>>, value: T) -> bool
-        where
-            T: Ord,
-        {
-            match node {
-                Some(ref boxed_node) => {
-                    match boxed_node.value.cmp(&value) {
-                        Ordering::Less => search_node(&boxed_node.right, value), // 在右子树中查找
-                        Ordering::Greater => search_node(&boxed_node.left, value), // 在左子树中查找
-                        Ordering::Equal => true, // 找到目标值
-                    }
-                }
-                None => false, // 节点为空，返回 false
-            }
-        }
-
-        search_node(&self.root, value)
+    fn search(&self, value: T) -> bool {
+        //TODo  
+        self.search_node(&self.root, value)
     }
-}
+    fn search_node(&self, node: &Option<Box<TreeNode<T>>>, value: T) -> bool {
+        match node {
+            Some(ref boxed_node) => match value.cmp(&boxed_node.value) {
+                Ordering::Less => self.search_node(&boxed_node.left, value), // 在左子树中查找
+                Ordering::Greater => self.search_node(&boxed_node.right, value), // 在右子树中查找
+                Ordering::Equal => true, // 找到目标值
+            },
+            None => false, // 节点为空，返回 false
+        }
+    }
 }
 
 impl<T> TreeNode<T>
@@ -92,26 +82,29 @@ where
 {
     // Insert a node into the tree
     fn insert(&mut self, value: T) {
+        //TODO
         match value.cmp(&self.value) {
             Ordering::Less => {
+                // 如果插入值小于当前节点值，插入到左子树
                 if let Some(ref mut left) = self.left {
-                    left.insert(value); // 递归插入到左子树
+                    left.insert(value); // 递归调用插入函数
                 } else {
-                    self.left = Some(Box::new(TreeNode::new(value))); // 如果左子树为空，创建新节点
+                    self.left = Some(Box::new(TreeNode::new(value))); // 如果左子节点为空，创建一个新节点
                 }
             }
             Ordering::Greater => {
+                // 如果插入值大于当前节点值，插入到右子树
                 if let Some(ref mut right) = self.right {
-                    right.insert(value); // 递归插入到右子树
+                    right.insert(value); // 递归调用插入函数
                 } else {
-                    self.right = Some(Box::new(TreeNode::new(value))); // 如果右子树为空，创建新节点
+                    self.right = Some(Box::new(TreeNode::new(value))); // 如果右子节点为空，创建一个新节点
                 }
             }
             Ordering::Equal => {
-                // 如果值相等，不插入重复值
+                // 如果插入值等于当前节点值，不插入重复值
+                println!("Value already exists in the tree.");
             }
         }
-        
     }
 }
 
